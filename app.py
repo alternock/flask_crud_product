@@ -2,19 +2,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from mock_data import data
 from helpers import _search_product_by_id, _model_product_swap, _model_product_exchange_req_with_res
-
+from routes.product_bp_list import product_bp_list
+from routes.product_bp_add import product_bp_add
 
 app = Flask(__name__)
+app.register_blueprint(product_bp_list, url_prefix='/api')
+app.register_blueprint(product_bp_add, url_prefix='/api')
 CORS(app)
 
-
-
-@app.route('/list', methods=['GET'])
-def fn_product_list():
-    return jsonify({
-        "data":data
-    })
-    
 
 
 @app.route('/search', methods=['GET'])
@@ -27,21 +22,6 @@ def fn_search_product_by_id():
         return jsonify({
             "data":res
         })
-
-
-
-@app.route('/add', methods=['POST'])
-def fn_add_new_product():
-    if request.method == 'POST':
-        req = request.json
-
-        new_product = _model_product_swap(req) 
-  
-        data.append(new_product)
-    
-        return jsonify({
-            "data":new_product
-        })   
 
 
 
